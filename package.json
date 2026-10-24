@@ -27,7 +27,7 @@
     "bench": "vitest bench --run",
     "build": "tsdown",
     "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm build && pnpm check:package && pnpm size",
-    "check:package": "publint && attw --pack . --profile esm-only",
+    "check:package": "publint && pnpm pack --out .cache/package.tgz && attw .cache/package.tgz --profile esm-only",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",

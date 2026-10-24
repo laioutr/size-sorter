@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+
+  publish:
+    needs: release
+    if: ${{ needs.release.outputs.release_created == 'true' && vars.NPM_PUBLISH == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      # Trusted publishing (OIDC) needs npm 11.5.1 or later.
+      - run: npm install --global npm@^11.5.1
+      # npm refuses to run inside the repo because devEngines names pnpm, so publish the packed tarball from outside it.
+      - run: pnpm pack --out "$RUNNER_TEMP/package.tgz"
+      - run: npm publish "$RUNNER_TEMP/package.tgz" --access public
+        working-directory: ${{ runner.temp }}

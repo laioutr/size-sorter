@@ -22,7 +22,8 @@ export function fold(value: string): string {
     .toUpperCase();
 }
 
-function toText(raw: unknown): string {
+/** Coerces any value to a string without throwing. */
+export function toText(raw: unknown): string {
   if (typeof raw === 'string') return raw;
   try {
     return String(raw ?? '');

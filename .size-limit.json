@@ -1,0 +1,6 @@
+[
+  { "name": "core + English", "path": "dist/index.js", "import": "{ sortBySize }", "limit": "3 kB", "gzip": true },
+  { "name": "de", "path": "dist/locales/index.js", "import": "{ de }", "limit": "0.4 kB", "gzip": true },
+  { "name": "nl", "path": "dist/locales/index.js", "import": "{ nl }", "limit": "0.4 kB", "gzip": true },
+  { "name": "all locales", "path": "dist/locales/index.js", "import": "*", "limit": "2 kB", "gzip": true }
+]
