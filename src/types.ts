@@ -46,6 +46,10 @@ export interface SizeLocale {
   readonly oneSize?: readonly string[];
   /** Words removed from the start of a label, e.g. `größe`. */
   readonly prefixes?: readonly string[];
+  /** Bed sizes, smallest first. */
+  readonly beds?: OrderedWords;
+  /** Pillow sizes, smallest first. */
+  readonly pillows?: OrderedWords;
 }
 
 export interface SortOptions<T> {

@@ -1,5 +1,6 @@
 import { fold, type Label, normalizeLabel, toText } from './normalize';
 import { parseAge } from './parsers/age';
+import { parseBed } from './parsers/bed';
 import { parseLetter } from './parsers/letter';
 import { parseFallback, parseNumeric } from './parsers/numeric';
 import { parseOneSize } from './parsers/oneSize';
@@ -10,7 +11,7 @@ import type { Reading } from './types';
 
 export type Parser = (label: Label, vocab: Vocabulary) => Reading[];
 
-const PARSERS: readonly Parser[] = [parseAge, parseNumeric, parseLetter, parseSequence, parseQuantity];
+const PARSERS: readonly Parser[] = [parseBed, parseAge, parseNumeric, parseLetter, parseSequence, parseQuantity];
 
 /** What may follow a prefix: `.` or `:` plus optional whitespace, whitespace, or a digit. */
 const AFTER_PREFIX = /^(?:[.:]\s*|\s+|(?=\d))/;
@@ -45,10 +46,11 @@ export function stripPrefixes(label: Label, vocab: Vocabulary): Label {
 const ANNOTATED = /^(.+?) (?:\(|[-–/] )/;
 
 /**
- * A label with two sizes in it sorts by the first one (spec 7.1):
- * - before a spaced separator or a bracket, when that part can be read
- * - before a single `/` when the part after it starts with a region code or is read in a
- *   different system: `US6/UK8`, `56/XXL`
+ * A label with two sizes in it (spec 7.1, 7.2):
+ * - sorts by the part before a spaced separator or a bracket, when that part can be read
+ * - sorts by the part before a single `/` when the part after it starts with a region code or
+ *   is read in a different system: `US6/UK8`, `56/XXL`
+ * - otherwise sorts between the two halves: `Full/Queen`
  */
 function parseFirstPart(text: string, vocab: Vocabulary): readonly Reading[] {
   const annotated = ANNOTATED.exec(text)?.[1];
@@ -58,9 +60,12 @@ function parseFirstPart(text: string, vocab: Vocabulary): readonly Reading[] {
   if (parts.length !== 2) return [];
   const [before = '', after = ''] = parts;
   const first = parseLabel(before, vocab);
-  const system = first[0]?.system;
-  const region = REGION_CODES.some((code) => normalizeLabel(after).folded.startsWith(code));
-  return system && (region || parseLabel(after, vocab)[0]?.system !== system) ? first : [];
+  const [a] = first;
+  const [b] = parseLabel(after, vocab);
+  if (!a) return [];
+  if (REGION_CODES.some((code) => normalizeLabel(after).folded.startsWith(code)) || b?.system !== a.system) return first;
+  // Both halves in one system, like `Full/Queen`: the combined size sorts between them (spec 7.2).
+  return a.key.length === b.key.length ? [{ ...a, key: a.key.map((value, index) => (value + (b.key[index] ?? value)) / 2) }] : [];
 }
 
 function readLabel(text: string, vocab: Vocabulary): readonly Reading[] {

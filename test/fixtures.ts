@@ -1,5 +1,5 @@
 import type { SizeLocale } from '../src/types';
-import { de, nl } from '../src/locales';
+import { de, fr, it, nl, pl } from '../src/locales';
 
 export interface Fixture {
   readonly name: string;
@@ -63,4 +63,12 @@ export const FIXTURES: readonly Fixture[] = [
   { name: 'weights', list: ['250 g', '500 g', '1 kg', '2,5 kg'] },
   { name: 'two-system', list: ['US6/UK8', 'US7/UK9', 'US8/UK10'] },
   { name: 'review focus 5', list: ['1L', '2L'] },
+  { name: 'US beds', list: ['Twin', 'Twin XL', 'Full', 'Queen', 'King', 'Cal King'] },
+  { name: 'UK beds', list: ['Small Single', 'Single', 'Small Double', 'Double', 'King', 'Super King', 'Emperor'] },
+  { name: 'pillows', list: ['Standard', 'Queen', 'King'] },
+  { name: 'nl beds', list: ['Eenpersoons', 'Tweepersoons', 'Lits-jumeaux'], locales: [nl] },
+  { name: 'fr words', list: ['Petit', 'Moyen', 'Grand'], locales: [fr] },
+  { name: 'it beds', list: ['Singolo', 'Piazza e mezza', 'Matrimoniale'], locales: [it] },
+  { name: 'fr ages', list: ['3A', '4A', '6A'], locales: [fr] },
+  { name: 'pl words', list: ['Mały', 'Średni', 'Duży'], locales: [pl] },
 ];

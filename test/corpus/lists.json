@@ -614,7 +614,7 @@
   {"industries":["home-bedding"],"markets":["EN"],"values":["Full/Queen","King/Cali King","Twin/Twin XL"]},
   {"industries":["home-bedding"],"markets":["EN"],"values":["Full/Queen","King/Cali King"]},
   {"industries":["home-bedding"],"markets":["EN"],"values":["King","Cal King"]},
-  {"industries":["home-bedding"],"markets":["EN"],"values":["King","Standard"]},
+  {"industries":["home-bedding"],"markets":["EN"],"values":["King","Standard"],"descending":true},
   {"industries":["home-bedding"],"markets":["EN"],"values":["Lightweight","All-Season","Heavyweight"]},
   {"industries":["home-bedding"],"markets":["EN"],"values":["Low Profile 6\"","Regular Profile 8\""]},
   {"industries":["home-bedding"],"markets":["EN"],"values":["Low Profile","Standard"]},

@@ -9,4 +9,5 @@ export const nl: SizeLocale = {
   babyWords: ['prematuur', 'pasgeboren'],
   oneSize: ['één maat', 'eenheidsmaat'],
   prefixes: ['maat'],
+  beds: ['eenpersoons', 'tweepersoons', 'lits-jumeaux'],
 };

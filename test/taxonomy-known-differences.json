@@ -1,0 +1,16 @@
+[
+{"values":["0-2","10/12","37/40","152/164","150/160","158/164","1-2","3-7","4-7","8-12","9.5-11.5","10-12","27","29","32-34","33","34-38","35-36","35-39","35-40","36-39","36-40","36-41","36-42","37-38","37-39","38-40","38-42","39-41","39-42","39-43","39-45","39-46","40-43","41-43","41-44","41-46","43-45","43-46","43-47","43-48","44-46","44-47","45-47","45-48","46-48","47-49","47-50","130","140","158-164"],"reason":"shop-error","note":"orders / pairs before ranges and plain numbers"},
+{"values":["36-48 months","42-48 months","48 months","48-60 months","60-72 months","0-1 years","0-2 years","0-3 years","0-4 years","0-5 years","0-6 years","0-12 years","10/12 Years","7/8 years","8/9 years","12/13 years","1-2.5 years","1-3 years","1-4 years","1.5 years","1.5-2 years","1.5-2.5 years","1.5-3 years","1.5-4 years","1.5-5 years","2 years","2-2.5 years","2-3 years","2-4 years","2-5 years","2-6 years","2-8 years","3 years","3-3.5 years","3-4 years","3-4.5 years","3-6 years","3-7 years","3-8 years","3-10 years","3-12 years","3.5-5 years","4 years","4-5 years","4-6 years","4-6 Years","4-7 years","4-8 years","4-9 years","4-10 years","4-12 years","4.5-6 years","5 years","5-6 years"],"reason":"shop-error","note":"lists months before years and / ranges after them"},
+{"values":["10/12T","6/7T","7/8T","9/10T"],"reason":"shop-error","note":"10/12T listed before 6/7T"},
+{"values":["2T-5T","2-8T"],"reason":"out-of-scope","note":"T ranges with T on both ends"},
+{"values":["4T-6","4-7T"],"reason":"out-of-scope","note":"T ranges with T on both ends"},
+{"values":["6-7T","6-8T","7T","7-8T","7T-8T","7-9T","8T","8-9T","8-12T","9T","9-10T","9T-10T","10T","10-11T","10-12T","13T","18 T","18T","32T","36T","42T","44T"],"reason":"out-of-scope","note":"T sizes above 6T mix kids’ and tall sizes"},
+{"values":["6/6X","1-3X"],"reason":"out-of-scope","note":"combined 6X ranges"},
+{"values":["6X","6X-7 years"],"reason":"out-of-scope","note":"combined 6X ranges"},
+{"values":["12X","14X","12+","3+ years","4+ years","5+ years","13+ years","14+ years","16+ years","18+ years","8C","14C","16C","34C","80C","130-140 cm","134-140 cm","146 cm","150 cm","150-160 cm","152-158 cm","152-164 cm","158-164 cm","158-170 cm","70D","140D","36E","80E","2EG","35-38 EU","38-40 EU","32F","34F","36F","38F","32FF","34FF","36FF","38FF","32G","34G","32GG","34GG","36GG","38GG","40GG","34H","36H","38H","34HH","36HH","38HH","40I","1/4 in"],"reason":"out-of-scope","note":"mixed families ordered by suffix"},
+{"values":["34JJ","8K","10-12K","14K","16K","3L"],"reason":"out-of-scope","note":"mixed families ordered by suffix"},
+{"values":["1/2 pint","28R","77R","82R","30S","32S","1 seater","2 seater","3 seater","4 seater","2-4 toddler","4-6 toddler","6-8 UK"],"reason":"out-of-scope","note":"mixed families ordered by suffix"},
+{"values":["3X plus","4X plus","2XB","3XB","4XB","5XB"],"reason":"shop-error","note":"groups X plus before XB; spec 6.2 sorts variants within their size"},
+{"values":["2XS","3XS","3XS-2XS","4XS","4XS-3XS","5XS","6XS","7XS","8XS","5XT"],"reason":"shop-error","note":"lists 2XS to 8XS, largest first"},
+{"values":["4Y","6y","9y","14y","1 year","12 year"],"reason":"shop-error","note":"lists y abbreviations before year words"}
+]

@@ -52,3 +52,11 @@ it.each([
   ["Men's XL", en, letter(2)],
   ['Women’s XL', en, letter(2)],
 ] as const)('sorts %s by its first size', (raw, vocab, [expected]) => expect(parseLabel(raw, vocab)[0]).toEqual(expected));
+
+it.each([
+  ['Full/Queen', [0, 6.5]],
+  ['King/Cal King', [0, 9]],
+  ['Twin/Twin XL', [0, 2.5]],
+])('puts the combined size %s between its halves', (raw, key) =>
+  expect(parseLabel(raw, en)[0]).toEqual({ system: 'bed', group: 'bed', key })
+);

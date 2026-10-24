@@ -1,6 +1,6 @@
 import { en } from './locales/en';
 import { fold } from './normalize';
-import type { LetterWord, Reading, SizeLocale, Variant } from './types';
+import type { LetterWord, OrderedWords, Reading, SizeLocale, Variant } from './types';
 
 /** The active locales' words, folded into lookup tables. */
 export interface Vocabulary {
@@ -18,6 +18,10 @@ export interface Vocabulary {
   readonly oneSize: readonly string[];
   /** Folded, longest first, region codes included. */
   readonly prefixes: readonly string[];
+  /** Folded bed word → [index of its locale among the active locales, English last; position in that locale's list]. */
+  readonly beds: ReadonlyMap<string, readonly [number, number]>;
+  /** Folded pillow word → position. */
+  readonly pillows: ReadonlyMap<string, number>;
   /** Label → readings, filled by `parseLabel`. */
   readonly labels: Map<string, readonly Reading[]>;
 }
@@ -37,29 +41,38 @@ function build(locales: readonly SizeLocale[]): Vocabulary {
   const letterWords = new Map<string, LetterWord>();
   const variantWords = new Map<string, Variant>();
   const babyWords = new Map<string, number>();
+  const beds = new Map<string, readonly [number, number]>();
+  const pillows = new Map<string, number>();
   const words = { months: new Set<string>(), years: new Set<string>(), oneSize: new Set<string>(), prefixes: new Set(REGION_CODES) };
   // Earlier locales win, so a word that is already set stays.
   const add = <V>(map: Map<string, V>, word: string, value: V) => {
     const folded = fold(word);
     if (!map.has(folded)) map.set(folded, value);
   };
-  for (const locale of locales) {
+  // Each word of an ordered list gets its position; synonyms share one.
+  const addOrdered = <V>(map: Map<string, V>, list: OrderedWords | undefined, value: (position: number) => V) =>
+    list?.forEach((entry, position) => {
+      for (const word of [entry].flat()) add(map, word, value(position));
+    });
+  locales.forEach((locale, index) => {
     for (const [word, letter] of Object.entries(locale.letters ?? {})) add(letterWords, word, letter);
     for (const [word, variant] of Object.entries(locale.variants ?? {})) add(variantWords, word, variant);
     const baby = locale.babyWords ?? [];
-    baby.forEach((entry, index) => {
-      for (const word of [entry].flat()) add(babyWords, word, index - baby.length + 1);
-    });
+    addOrdered(babyWords, baby, (position) => position - baby.length + 1);
+    addOrdered(beds, locale.beds, (position) => [index, position] as const);
+    addOrdered(pillows, locale.pillows, (position) => position);
     for (const key of ['months', 'years', 'oneSize', 'prefixes'] as const) {
       for (const word of locale[key] ?? []) words[key].add(fold(word));
     }
-  }
+  });
   return {
     letterWords,
     variantWords,
     monthWords: longestFirst(words.months),
     yearWords: longestFirst(words.years),
     babyWords,
+    beds,
+    pillows,
     oneSize: longestFirst(words.oneSize),
     prefixes: longestFirst(words.prefixes),
     labels: new Map(),

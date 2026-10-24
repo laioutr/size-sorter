@@ -1,6 +1,9 @@
 [
-  { "name": "core + English", "path": "dist/index.js", "import": "{ sortBySize }", "limit": "4.9 kB", "gzip": true },
-  { "name": "de", "path": "dist/locales/index.js", "import": "{ de }", "limit": "0.4 kB", "gzip": true },
-  { "name": "nl", "path": "dist/locales/index.js", "import": "{ nl }", "limit": "0.4 kB", "gzip": true },
-  { "name": "all locales", "path": "dist/locales/index.js", "import": "*", "limit": "2 kB", "gzip": true }
+  { "name": "core + English", "path": "dist/index.js", "import": "{ sortBySize }", "limit": "5.3 kB", "gzip": true },
+  { "name": "de", "path": "dist/locales/index.js", "import": "{ de }", "limit": "0.25 kB", "gzip": true },
+  { "name": "nl", "path": "dist/locales/index.js", "import": "{ nl }", "limit": "0.25 kB", "gzip": true },
+  { "name": "fr", "path": "dist/locales/index.js", "import": "{ fr }", "limit": "0.2 kB", "gzip": true },
+  { "name": "it", "path": "dist/locales/index.js", "import": "{ it }", "limit": "0.25 kB", "gzip": true },
+  { "name": "pl", "path": "dist/locales/index.js", "import": "{ pl }", "limit": "0.25 kB", "gzip": true },
+  { "name": "all locales", "path": "dist/locales/index.js", "import": "*", "limit": "0.85 kB", "gzip": true }
 ]
