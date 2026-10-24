@@ -25,10 +25,23 @@ export interface Reading {
 
 export type LetterWord = 'S' | 'M' | 'L' | 'X';
 
+export type Variant = 'short' | 'regular' | 'long';
+
+/** Words in order. An inner array lists synonyms. */
+export type OrderedWords = readonly (string | readonly string[])[];
+
 /** Words for one language. Words are written in their natural spelling and folded when compiled. */
 export interface SizeLocale {
   /** Letter words, e.g. `klein: 'S'`, `extra: 'X'`. */
   readonly letters?: Readonly<Record<string, LetterWord>>;
+  /** Fit and length words, e.g. `kurz: 'short'`, `lang: 'long'`. */
+  readonly variants?: Readonly<Record<string, Variant>>;
+  /** Words for months after a number, e.g. `monate`. */
+  readonly months?: readonly string[];
+  /** Words for years after a number, e.g. `jahre`. */
+  readonly years?: readonly string[];
+  /** Words for babies younger than 0 months, smallest first, ending with "newborn". */
+  readonly babyWords?: OrderedWords;
   /** Words that mean "one size". */
   readonly oneSize?: readonly string[];
   /** Words removed from the start of a label, e.g. `größe`. */

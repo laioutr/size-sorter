@@ -1,13 +1,16 @@
-import { fold, type Label, normalizeLabel } from './normalize';
+import { fold, type Label, normalizeLabel, toText } from './normalize';
+import { parseAge } from './parsers/age';
 import { parseLetter } from './parsers/letter';
 import { parseFallback, parseNumeric } from './parsers/numeric';
 import { parseOneSize } from './parsers/oneSize';
+import { parseQuantity } from './parsers/quantity';
+import { parseSequence } from './parsers/sequence';
+import { REGION_CODES, type Vocabulary } from './vocabulary';
 import type { Reading } from './types';
-import type { Vocabulary } from './vocabulary';
 
 export type Parser = (label: Label, vocab: Vocabulary) => Reading[];
 
-const PARSERS: readonly Parser[] = [parseNumeric, parseLetter];
+const PARSERS: readonly Parser[] = [parseAge, parseNumeric, parseLetter, parseSequence, parseQuantity];
 
 /** What may follow a prefix: `.` or `:` plus optional whitespace, whitespace, or a digit. */
 const AFTER_PREFIX = /^(?:[.:]\s*|\s+|(?=\d))/;
@@ -38,15 +41,57 @@ export function stripPrefixes(label: Label, vocab: Vocabulary): Label {
   return { raw: label.raw, text, folded };
 }
 
-/** Every reading of one label, in default order. Empty when the label is unknown. */
-export function parseLabel(raw: unknown, vocab: Vocabulary): Reading[] {
-  const label = normalizeLabel(raw);
+/** The part before the first ` (`, ` - `, ` – ` or ` / `: `XS (6-8)`, `Small - 42cm`, `Newborn / 0-3 months`. */
+const ANNOTATED = /^(.+?) (?:\(|[-–/] )/;
+
+/**
+ * A label with two sizes in it sorts by the first one (spec 7.1):
+ * - before a spaced separator or a bracket, when that part can be read
+ * - before a single `/` when the part after it starts with a region code or is read in a
+ *   different system: `US6/UK8`, `56/XXL`
+ */
+function parseFirstPart(text: string, vocab: Vocabulary): readonly Reading[] {
+  const annotated = ANNOTATED.exec(text)?.[1];
+  const head = annotated === undefined ? [] : parseLabel(annotated, vocab);
+  if (head.length > 0) return head;
+  const parts = text.split('/');
+  if (parts.length !== 2) return [];
+  const [before = '', after = ''] = parts;
+  const first = parseLabel(before, vocab);
+  const system = first[0]?.system;
+  const region = REGION_CODES.some((code) => normalizeLabel(after).folded.startsWith(code));
+  return system && (region || parseLabel(after, vocab)[0]?.system !== system) ? first : [];
+}
+
+function readLabel(text: string, vocab: Vocabulary): readonly Reading[] {
+  const label = normalizeLabel(text);
   if (!label.folded) return [];
   const oneSize = parseOneSize(label, vocab);
   if (oneSize.length > 0) return oneSize;
   const stripped = stripPrefixes(label, vocab);
   const readings = PARSERS.flatMap((parse) => parse(stripped, vocab));
   if (readings.length > 0) return readings;
+  const parts = parseFirstPart(stripped.text, vocab);
+  if (parts.length > 0) return parts;
   const fallback = parseFallback(stripped);
   return fallback ? [fallback] : [];
+}
+
+/** Labels cached per vocabulary before the cache starts over, so it can't grow without limit. */
+const CACHE_LIMIT = 5000;
+
+/**
+ * Every reading of one label, in default order. Empty when the label is unknown.
+ * Cached per vocabulary, because shops sort the same labels for every product.
+ */
+export function parseLabel(raw: unknown, vocab: Vocabulary): readonly Reading[] {
+  const text = toText(raw);
+  const { labels } = vocab;
+  let readings = labels.get(text);
+  if (!readings) {
+    if (labels.size >= CACHE_LIMIT) labels.clear();
+    readings = readLabel(text, vocab);
+    labels.set(text, readings);
+  }
+  return readings;
 }

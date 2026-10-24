@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+import type { Reading } from '../types';
 import { de, nl } from '../locales';
 import { parseLabel } from '../parse';
 import { compileVocabulary, type Vocabulary } from '../vocabulary';
@@ -59,11 +60,50 @@ it.each([
 it.each([
   ['152 XS|S', 152, 'XS|S'],
   ['30 Kapseln', 30, 'Kapseln'],
-  ['10oz', 10, 'oz'],
   ['700c', 700, 'c'],
   ['2-persoons', 2, '-persoons'],
 ])('falls back to the leading number of %s', (raw, n, text) => expectNumber(raw, en, [n, n, 1000], text));
 
 it.each(['XL', '2XL', '1X', 'Kids', ''])('has no numeric reading for %j', (raw) =>
   expect(parseLabel(raw, en).some((reading) => reading.group === 'numeric')).toBe(false)
+);
+
+const ofSystem = (system: Reading['system'], key: number[], text?: string): Reading => ({
+  system,
+  group: 'numeric',
+  key,
+  ...(text === undefined ? {} : { text }),
+});
+
+it.each([
+  ['42S', en, [ofSystem('number', [42, 42, 1])]],
+  ['42R', en, [ofSystem('number', [42, 42, 3])]],
+  ['42L', en, [ofSystem('number', [42, 42, 4]), ofSystem('bra', [42, 42, 28])]],
+  ['38M', en, [ofSystem('number', [38, 38, 3]), ofSystem('bra', [38, 38, 29])]],
+  ['12P', en, [ofSystem('number', [12, 12, 1])]],
+  ['14W', en, [ofSystem('number', [14, 14, 4])]],
+  ['7 W', en, [ofSystem('number', [7, 7, 4])]],
+  ['10 2E', en, [ofSystem('number', [10, 10, 5])]],
+  ['10 4E', en, [ofSystem('number', [10, 10, 6])]],
+  ['32 Long', en, [ofSystem('number', [32, 32, 4])]],
+  ['32 Tall', en, [ofSystem('number', [32, 32, 4])]],
+  ['32 Short', en, [ofSystem('number', [32, 32, 1])]],
+  ['32 Reg', en, [ofSystem('number', [32, 32, 3])]],
+  ['40 lang', deV, [ofSystem('number', [40, 40, 4])]],
+  ['20T', en, [ofSystem('number', [20, 20, 4])]],
+  ['70B', en, [ofSystem('bra', [70, 70, 12])]],
+  ['75 C', en, [ofSystem('bra', [75, 75, 13])]],
+  ['34DD', en, [ofSystem('bra', [34, 34, 15])]],
+  ['85AA', en, [ofSystem('bra', [85, 85, 10])]],
+  ['10C', en, [ofSystem('kidsShoe', [-4, -4, 2])]],
+  ['13.5C', en, [ofSystem('kidsShoe', [-0.5, -0.5, 2])]],
+  ['13K', en, [ofSystem('kidsShoe', [-1, -1, 2])]],
+  ['11T', en, [ofSystem('kidsShoe', [-3, -3, 2])]],
+  ['1Y', en, [ofSystem('kidsShoe', [1, 1, 2])]],
+  ['40t', en, [ofSystem('number', [40, 40, 1000], 't')]],
+  ['157MW', en, [ofSystem('number', [157, 157, 1000], 'MW')]],
+  ['50B', en, [ofSystem('number', [50, 50, 1000], 'B')]],
+] as const)('reads %s with its variant, cup or shoe series', (raw, vocab, expected) =>
+  // Age readings (Task 12) and volume readings (Task 13) are tested with their own parsers.
+  expect(parseLabel(raw, vocab).filter((reading) => reading.group === 'numeric')).toEqual(expected)
 );

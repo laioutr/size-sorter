@@ -39,3 +39,16 @@ it('returns [] for unknown and empty labels', () => {
   expect(parseLabel('Kids', en)).toEqual([]);
   expect(parseLabel('   ', en)).toEqual([]);
 });
+
+const letter = (rank: number) => [{ system: 'letter', group: 'letter', key: [rank, 2] }];
+
+it.each([
+  ['XS (6-8)', en, letter(-2)],
+  ['XXS-XL (71")', en, letter(-0.5)],
+  [`Small - 42cm - ( Riders 5'6" - 5'10" )`, en, letter(-1)],
+  ['M - Size 8', en, letter(0)],
+  ['S (W5-7)', en, letter(-1)],
+  ['Newborn / 0-3 months', en, [{ system: 'age', group: 'age', key: [0, 0] }]],
+  ["Men's XL", en, letter(2)],
+  ['Women’s XL', en, letter(2)],
+] as const)('sorts %s by its first size', (raw, vocab, [expected]) => expect(parseLabel(raw, vocab)[0]).toEqual(expected));

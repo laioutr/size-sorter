@@ -9,14 +9,25 @@ export const NUMBER_SOURCE: string = String.raw`(?:\d+(?:[.,]\d+)*|[.,]\d+)`;
 
 const NUMBER = new RegExp(`^${NUMBER_SOURCE}$`);
 
-const LETTERS: Readonly<Record<string, string>> = { ä: 'ae', Ä: 'AE', ö: 'oe', Ö: 'OE', ü: 'ue', Ü: 'UE', ß: 'ss', ł: 'l', Ł: 'L' };
+const LETTERS: Readonly<Record<string, string>> = {
+  ä: 'ae',
+  Ä: 'AE',
+  ö: 'oe',
+  Ö: 'OE',
+  ü: 'ue',
+  Ü: 'UE',
+  ß: 'ss',
+  ł: 'l',
+  Ł: 'L',
+  '’': "'",
+};
 
 const FRACTIONS: Readonly<Record<string, string>> = { '½': ' 1/2', '⅓': ' 1/3', '⅔': ' 2/3', '¼': ' 1/4', '¾': ' 3/4' };
 
-/** Folds a word for matching: umlauts to `ae oe ue`, `ß` to `ss`, accents removed, upper-case. */
+/** Folds a word for matching: umlauts to `ae oe ue`, `ß` to `ss`, `’` to `'`, accents removed, upper-case. */
 export function fold(value: string): string {
   return value
-    .replace(/[äÄöÖüÜßłŁ]/g, (char) => LETTERS[char] ?? char)
+    .replace(/[äÄöÖüÜßłŁ’]/g, (char) => LETTERS[char] ?? char)
     .normalize('NFD')
     .replace(/\p{M}/gu, '')
     .toUpperCase();

@@ -4,12 +4,19 @@ import { DEFAULT_GROUP_ORDER, type Reading, type SizeGroup } from './types';
 export const collator: Intl.Collator = new Intl.Collator('und', { numeric: true });
 
 /** Position of each group: the listed groups first, then the rest in default order. */
-export function groupRanks(groupOrder: readonly SizeGroup[] = []): ReadonlyMap<SizeGroup, number> {
+function buildRanks(groupOrder: readonly SizeGroup[]): ReadonlyMap<SizeGroup, number> {
   const ranks = new Map<SizeGroup, number>();
   for (const group of [...groupOrder, ...DEFAULT_GROUP_ORDER]) {
     if (DEFAULT_GROUP_ORDER.includes(group) && !ranks.has(group)) ranks.set(group, ranks.size);
   }
   return ranks;
+}
+
+const DEFAULT_RANKS = buildRanks([]);
+
+export function groupRanks(groupOrder: readonly SizeGroup[] = []): ReadonlyMap<SizeGroup, number> {
+  // Most sorts use the default order, so it is built once.
+  return groupOrder.length > 0 ? buildRanks(groupOrder) : DEFAULT_RANKS;
 }
 
 /** Compares keys element by element. A missing element sorts first. */
