@@ -1,0 +1,66 @@
+{
+  "name": "@laioutr/size-sorter",
+  "version": "0.0.0",
+  "description": "Sorts product size labels (XS–10XL, shoe sizes, ranges, ages, cups, volumes, beds) the way shoppers expect",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laioutr/size-sorter.git"
+  },
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./locales": {
+      "types": "./dist/locales/index.d.ts",
+      "import": "./dist/locales/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "bench": "vitest bench --run",
+    "build": "tsdown",
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm build && pnpm check:package && pnpm size",
+    "check:package": "publint && attw --pack . --profile esm-only",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "size": "size-limit",
+    "test": "vitest run",
+    "test:taxonomy": "vitest run test/taxonomy.test.ts",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json && tsc -p test/tsconfig.json"
+  },
+  "prettier": "@laioutr/prettier-config",
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@laioutr/eslint-config": "^1.9.5",
+    "@laioutr/prettier-config": "^1.1.0",
+    "@size-limit/preset-small-lib": "^14.3.0",
+    "@types/node": "^26.6.5",
+    "eslint": "^9.39.5",
+    "fast-check": "^4.10.2",
+    "prettier": "^3.9.10",
+    "publint": "^0.3.25",
+    "size-limit": "^14.3.0",
+    "tsdown": "^0.23.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.6.0",
+      "onFail": "download"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
