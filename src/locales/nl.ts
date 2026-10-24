@@ -2,8 +2,8 @@ import type { SizeLocale } from '../types';
 
 /** Dutch. */
 export const nl: SizeLocale = {
-  letters: { klein: 'S', middel: 'M', groot: 'L', extra: 'X' },
-  variants: { kort: 'short', normaal: 'regular', lang: 'long' },
+  letters: { S: ['klein'], M: ['middel'], L: ['groot'], X: ['extra'] },
+  variants: { short: ['kort'], regular: ['normaal'], long: ['lang'] },
   months: ['maand', 'maanden', 'mnd'],
   years: ['j', 'jaar', 'jr'],
   babyWords: ['prematuur', 'pasgeboren'],

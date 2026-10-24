@@ -32,10 +32,10 @@ export type OrderedWords = readonly (string | readonly string[])[];
 
 /** Words for one language. Words are written in their natural spelling and folded when compiled. */
 export interface SizeLocale {
-  /** Letter words, e.g. `klein: 'S'`, `extra: 'X'`. */
-  readonly letters?: Readonly<Record<string, LetterWord>>;
-  /** Fit and length words, e.g. `kurz: 'short'`, `lang: 'long'`. */
-  readonly variants?: Readonly<Record<string, Variant>>;
+  /** Words for each letter, e.g. `S: ['klein']`; `X` lists the "extra" words. */
+  readonly letters?: Readonly<Partial<Record<LetterWord, readonly string[]>>>;
+  /** Fit and length words, e.g. `short: ['kurz']`, `long: ['lang']`. */
+  readonly variants?: Readonly<Partial<Record<Variant, readonly string[]>>>;
   /** Words for months after a number, e.g. `monate`. */
   readonly months?: readonly string[];
   /** Words for years after a number, e.g. `jahre`. */

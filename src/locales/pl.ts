@@ -2,8 +2,8 @@ import type { SizeLocale } from '../types';
 
 /** Polish. */
 export const pl: SizeLocale = {
-  letters: { mały: 'S', średni: 'M', duży: 'L', extra: 'X' },
-  variants: { krótki: 'short', regularny: 'regular', długi: 'long' },
+  letters: { S: ['mały'], M: ['średni'], L: ['duży'], X: ['extra'] },
+  variants: { short: ['krótki'], regular: ['regularny'], long: ['długi'] },
   months: ['mies', 'miesiąc', 'miesiące', 'miesięcy'],
   years: ['rok', 'lata', 'lat'],
   babyWords: ['wcześniak', 'noworodek'],

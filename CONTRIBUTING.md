@@ -31,8 +31,8 @@ Lists from shops that sort largest first carry `"descending": true` in `test/cor
 
 1. Copy `src/locales/de.ts` to a new file named after the language code, such as `src/locales/es.ts`.
 2. Fill in the fields of `SizeLocale` (all optional, natural spelling; words are folded when compiled):
-   - `letters`: words for S, M, L and "extra" (`X`)
-   - `variants`: short, regular and long words
+   - `letters`: the words for each of `S`, `M`, `L`, and `X` for "extra", such as `S: ['klein']`
+   - `variants`: the words for `short`, `regular` and `long`, such as `long: ['lang']`
    - `months` and `years`: words after a number, such as `6 meses`
    - `babyWords`: smallest first, ending with "newborn"
    - `oneSize` and `prefixes`

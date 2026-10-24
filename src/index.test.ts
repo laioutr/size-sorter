@@ -1,4 +1,4 @@
-import { expect, it } from 'vitest';
+import { expect, expectTypeOf, it } from 'vitest';
 import { de } from './locales';
 import { createSizeComparator, sortBySize } from './index';
 
@@ -55,4 +55,25 @@ it('puts empty labels with the unknown values', () => {
   const output = sortBySize(['', 'M', '   ']);
   expect(output[0]).toBe('M');
   expect(output).toHaveLength(3);
+});
+
+it('keeps literal label types', () => {
+  type Size = 'S' | 'M' | 'L';
+  const sizes: Size[] = ['L', 'S'];
+  const sorted: Size[] = sortBySize(sizes);
+  expectTypeOf(sortBySize(sizes)).toEqualTypeOf<Size[]>();
+  expect(sorted).toEqual(['S', 'L']);
+});
+
+it('ignores empty locale words instead of hanging', () => {
+  const locales = [{ prefixes: ['', '́'], oneSize: [''], letters: { S: [''] } }];
+  expect(sortBySize(['42', '40', 'M', 'S'], { locales })).toEqual(['40', '42', 'S', 'M']);
+});
+
+it('never throws on null options or sparse arrays from JavaScript callers', () => {
+  expect(sortBySize(['L', 'S'], { locales: null, groupOrder: null } as never)).toEqual(['S', 'L']);
+  expect(sortBySize(['L', 'S'], null as never)).toEqual(['S', 'L']);
+  expect(createSizeComparator(['L', 'S'], { locales: null, groupOrder: null } as never)('L', 'S')).toBeGreaterThan(0);
+  // eslint-disable-next-line no-sparse-arrays -- a hole is what a JavaScript caller can pass
+  expect(() => sortBySize(['M', , 'S'] as string[])).not.toThrow();
 });

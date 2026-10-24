@@ -14,7 +14,7 @@ it.each([
   ['Twin XL', en, [bed(0, 3)]],
   ['Queen Size', en, [bed(0, 7), pillow(1)]],
   ['King', en, [bed(0, 8), pillow(2)]],
-  ['Standard', en, [pillow(0)]],
+  ['Standard', en, [pillow(0), { system: 'lengthWord', group: 'letter', key: [0, 2] }]],
   ['California King', en, [bed(0, 10)]],
   ['Cal King', en, [bed(0, 10)]],
   ['Split King', en, [bed(0, 11)]],

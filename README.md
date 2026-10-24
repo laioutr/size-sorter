@@ -5,7 +5,7 @@ Sorts product size labels the way a shopper expects: `XS S M L XL`, `36 36,5 37 
 - No dependencies, ESM only, runs in browsers, Node and SSR.
 - The same input gives the same output on the server and in the browser.
 - Unknown values never break the sort. They go last, alphabetically.
-- About 4.8 kB min+gzip with English; each extra language adds about 0.2 kB.
+- About 4.9 kB min+gzip with English; each extra language adds about 0.2 kB.
 
 ## Install
 
@@ -79,7 +79,7 @@ Numbers come before letters because, in lists that mix them, the numbers are usu
 - **Combined sizes** sort between their halves: `S|M`, `XS/S`, `L-XL`, `Small/Medium`. This works for beds too: `Full/Queen`.
 - **Words** are read in every active language: `Extra Small`, `X-Large`, `2X-Large`, `XSmall`, `Sm`, `Lg`, `extra groß`, `très grand`.
 - **Fit after a letter size:** `S < ST`, `MS < M < MT`, `XLT`, `2XB`, `L Tall`.
-- **Length words** alone (`Short`, `Regular`, `Long`, `S`, `R`, `L`, `T`, `P`) sort short, regular, long.
+- **Length words** alone (`Short`, `Regular`, `Standard`, `Long`, `S`, `R`, `L`, `T`, `P`) sort short, regular, long.
 
 ### Labels with more than one size
 
@@ -124,8 +124,8 @@ A locale is plain data, so you can write your own. Every field is optional, and 
 import type { SizeLocale } from '@laioutr/size-sorter';
 
 const es: SizeLocale = {
-  letters: { pequeño: 'S', mediano: 'M', grande: 'L', extra: 'X' }, // 'S' | 'M' | 'L' | 'X'
-  variants: { corto: 'short', normal: 'regular', largo: 'long' },
+  letters: { S: ['pequeño'], M: ['mediano'], L: ['grande'], X: ['extra'] }, // X lists the "extra" words
+  variants: { short: ['corto'], regular: ['normal'], long: ['largo'] },
   months: ['mes', 'meses'],
   years: ['año', 'años'],
   babyWords: ['prematuro', 'recién nacido'], // smallest first, ending with "newborn"

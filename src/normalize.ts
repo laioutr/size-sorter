@@ -22,7 +22,17 @@ const LETTERS: Readonly<Record<string, string>> = {
   '’': "'",
 };
 
-const FRACTIONS: Readonly<Record<string, string>> = { '½': ' 1/2', '⅓': ' 1/3', '⅔': ' 2/3', '¼': ' 1/4', '¾': ' 3/4' };
+const FRACTIONS: Readonly<Record<string, string>> = {
+  '½': ' 1/2',
+  '⅓': ' 1/3',
+  '⅔': ' 2/3',
+  '¼': ' 1/4',
+  '¾': ' 3/4',
+  '⅛': ' 1/8',
+  '⅜': ' 3/8',
+  '⅝': ' 5/8',
+  '⅞': ' 7/8',
+};
 
 /** Folds a word for matching: umlauts to `ae oe ue`, `ß` to `ss`, `’` to `'`, accents removed, upper-case. */
 export function fold(value: string): string {
@@ -46,8 +56,9 @@ export function toText(raw: unknown): string {
 export function normalizeLabel(raw: unknown): Label {
   const source = toText(raw);
   const text = source
-    .replace(/[\u200B-\u200D\uFEFF]/g, '')
-    .replace(/[½⅓⅔¼¾]/g, (char) => FRACTIONS[char] ?? char)
+    .replace(/[\u00AD\u200B-\u200D\u2060\uFEFF]/g, '')
+    .replace(/[½⅓⅔¼¾⅛⅜⅝⅞]/g, (char) => FRACTIONS[char] ?? char)
+    .replace(/\u2044/g, '/')
     .replace(/\s+/g, ' ')
     .trim();
   return { raw: source, text, folded: fold(text) };

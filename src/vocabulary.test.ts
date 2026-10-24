@@ -20,8 +20,8 @@ it('sorts one-size words and prefixes longest first', () => {
 });
 
 it('lets earlier locales win and checks English last', () => {
-  const a: SizeLocale = { letters: { grand: 'L', large: 'S' } };
-  const b: SizeLocale = { letters: { grand: 'S' } };
+  const a: SizeLocale = { letters: { L: ['grand'], S: ['large'] } };
+  const b: SizeLocale = { letters: { S: ['grand'] } };
   expect(compileVocabulary([a, b]).letterWords.get('GRAND')).toBe('L');
   expect(compileVocabulary([b, a]).letterWords.get('GRAND')).toBe('S');
   expect(compileVocabulary([a]).letterWords.get('LARGE')).toBe('S');

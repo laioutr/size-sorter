@@ -90,8 +90,9 @@ export const parseNumeric: Parser = ({ text, folded }, vocab) => {
   }
   const match = WITH_UNIT.exec(text) ?? WITH_HEAD.exec(text);
   if (match) return readSpan(match);
-  const [, value, space = '', suffix = ''] = SUFFIX.exec(text) ?? [];
-  const n = readValue(value);
+  const [, value = '', space = '', suffix = ''] = SUFFIX.exec(text) ?? [];
+  // `00P` and `000P` keep the zero-size order.
+  const n = ZEROS.test(value) ? 1 - value.length : readValue(value);
   return n === undefined ? [] : readSuffix(n, space, suffix, vocab);
 };
 

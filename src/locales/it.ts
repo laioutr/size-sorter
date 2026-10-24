@@ -2,8 +2,8 @@ import type { SizeLocale } from '../types';
 
 /** Italian. */
 export const it: SizeLocale = {
-  letters: { piccolo: 'S', medio: 'M', grande: 'L', extra: 'X' },
-  variants: { corto: 'short', regolare: 'regular', lungo: 'long' },
+  letters: { S: ['piccolo'], M: ['medio'], L: ['grande'], X: ['extra'] },
+  variants: { short: ['corto'], regular: ['regolare'], long: ['lungo'] },
   months: ['mese', 'mesi'],
   years: ['anno', 'anni'],
   babyWords: ['prematuro', 'neonato'],

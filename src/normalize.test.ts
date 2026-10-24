@@ -20,6 +20,11 @@ describe('normalizeLabel', () => {
     ['42⅔', '42 2/3', '42 2/3'],
     ['37\u00A01/3', '37 1/3', '37 1/3'],
     ['XL\u200B', 'XL', 'XL'],
+    ['X\u00ADL', 'XL', 'XL'],
+    ['XL\u2060', 'XL', 'XL'],
+    ['7⅛', '7 1/8', '7 1/8'],
+    ['7⅞', '7 7/8', '7 7/8'],
+    ['7 1\u20448', '7 1/8', '7 1/8'],
   ])('normalises %j', (raw, text, folded) => expect(normalizeLabel(raw)).toEqual({ raw, text, folded }));
 
   it('coerces non-strings', () => {

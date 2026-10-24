@@ -2,18 +2,11 @@ import type { SizeLocale } from '../types';
 
 /** English. Built into the core and always active. */
 export const en: SizeLocale = {
-  letters: { small: 'S', sm: 'S', medium: 'M', med: 'M', md: 'M', large: 'L', lg: 'L', extra: 'X', x: 'X', xtra: 'X' },
+  letters: { S: ['small', 'sm'], M: ['medium', 'med', 'md'], L: ['large', 'lg'], X: ['extra', 'x', 'xtra'] },
   variants: {
-    short: 'short',
-    petite: 'short',
-    narrow: 'short',
-    regular: 'regular',
-    reg: 'regular',
-    long: 'long',
-    tall: 'long',
-    big: 'long',
-    wide: 'long',
-    plus: 'long',
+    short: ['short', 'petite', 'narrow'],
+    regular: ['regular', 'reg', 'standard'],
+    long: ['long', 'tall', 'big', 'wide', 'plus'],
   },
   months: ['mo', 'mos', 'mth', 'month', 'months'],
   years: ['yr', 'yrs', 'year', 'years'],
