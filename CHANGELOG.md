@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/laioutr/size-sorter/compare/size-sorter-v0.1.0...size-sorter-v0.1.1) (2026-10-27)
+
+
+### Miscellaneous Chores
+
+* release 0.1.1 ([5abecaf](https://github.com/laioutr/size-sorter/commit/5abecaf24ecfd03a90033efa6be87fcb7aa066e7))
+
 ## 0.1.0 (2026-10-27)
 
 
