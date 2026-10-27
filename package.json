@@ -1,6 +1,6 @@
 {
   "name": "@laioutr/size-sorter",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Sorts product size labels (XS–10XL, shoe sizes, ranges, ages, cups, volumes, beds) the way shoppers expect",
   "repository": {
     "type": "git",
