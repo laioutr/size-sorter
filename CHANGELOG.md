@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/laioutr/size-sorter/compare/size-sorter-v0.1.1...size-sorter-v0.2.0) (2026-10-27)
+
+
+### Features
+
+* add the unknown option ([81a0088](https://github.com/laioutr/size-sorter/commit/81a0088f2ae10ffabca58c46d3c4dc828f6ca2c0))
+
 ## [0.1.1](https://github.com/laioutr/size-sorter/compare/size-sorter-v0.1.0...size-sorter-v0.1.1) (2026-10-27)
 
 
