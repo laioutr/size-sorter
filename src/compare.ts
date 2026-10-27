@@ -1,4 +1,4 @@
-import { DEFAULT_GROUP_ORDER, type Reading, type SizeGroup } from './types';
+import { DEFAULT_GROUP_ORDER, type Reading, type SizeGroup, type UnknownPlacement } from './types';
 
 /** Fixed, so the server and the browser agree. */
 export const collator: Intl.Collator = new Intl.Collator('und', { numeric: true });
@@ -43,18 +43,35 @@ function compareText(a: string | undefined, b: string | undefined): number {
 export interface Entry {
   readonly raw: string;
   readonly reading: Reading | undefined;
+  /** Input position, which orders unknown values when they keep their input order. */
+  readonly order: number;
 }
 
-/** Recognised values by group, key and text; unknown values last, in collator order. */
-export function compareEntries(a: Entry, b: Entry, ranks: ReadonlyMap<SizeGroup, number>, descending: boolean): number {
+export interface Placement {
+  readonly descending: boolean;
+  readonly unknownFirst: boolean;
+  readonly keepOrder: boolean;
+}
+
+/** Any other `unknown` value, null included, behaves like the default `'alphabetical-last'`. */
+export function placement(descending: boolean | null | undefined, unknown: UnknownPlacement | null | undefined): Placement {
+  return {
+    descending: descending === true,
+    unknownFirst: unknown === 'alphabetical-first' || unknown === 'original-first',
+    keepOrder: unknown === 'original-first' || unknown === 'original-last',
+  };
+}
+
+/** Recognised values by group, key and text; unknown values first or last, in input or collator order. */
+export function compareEntries(a: Entry, b: Entry, ranks: ReadonlyMap<SizeGroup, number>, place: Placement): number {
   if (!a.reading || !b.reading) {
-    if (a.reading) return -1;
-    if (b.reading) return 1;
-    return collator.compare(a.raw, b.raw);
+    if (a.reading) return place.unknownFirst ? 1 : -1;
+    if (b.reading) return place.unknownFirst ? -1 : 1;
+    return (place.keepOrder && a.order - b.order) || collator.compare(a.raw, b.raw);
   }
   const result =
     (ranks.get(a.reading.group) ?? 0) - (ranks.get(b.reading.group) ?? 0) ||
     compareKeys(a.reading.key, b.reading.key) ||
     compareText(a.reading.text, b.reading.text);
-  return descending ? 0 - result : result;
+  return place.descending ? 0 - result : result;
 }

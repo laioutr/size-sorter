@@ -84,3 +84,25 @@ it('reverses recognised values and keeps unknown values last when descending', (
     }),
     runs
   ));
+
+it.each(['alphabetical-last', 'alphabetical-first', 'original-last', 'original-first'] as const)(
+  'places unknown values with %s and leaves the recognised order alone',
+  (unknown) =>
+    fc.assert(
+      fc.property(list, fc.boolean(), (values, descending) => {
+        const sorted = sortBySize(values, { unknown, descending });
+        const unknowns = sorted.filter((value) => !recognised(value));
+        const expected = (unknown.startsWith('original') ? values : sortBySize(values)).filter((value) => !recognised(value));
+        expect(unknowns).toEqual(expected);
+        const start = unknown.endsWith('first') ? 0 : sorted.length - unknowns.length;
+        expect(sorted.slice(start, start + unknowns.length)).toEqual(unknowns);
+        expect(sorted.filter(recognised)).toEqual(sortBySize(values, { descending }).filter(recognised));
+        // The comparator sees strings, not positions, so a repeated unknown string takes its first place in `values`.
+        const firstPlaced = unknown.startsWith('original') ? [...unknowns].sort((a, b) => values.indexOf(a) - values.indexOf(b)) : unknowns;
+        const known = sorted.filter(recognised);
+        const compared = values.slice().sort(createSizeComparator(values, { unknown, descending }));
+        expect(compared).toEqual(unknown.endsWith('first') ? [...firstPlaced, ...known] : [...known, ...firstPlaced]);
+      }),
+      runs
+    )
+);

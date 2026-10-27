@@ -5,7 +5,7 @@ Sorts product size labels the way a shopper expects: `XS S M L XL`, `36 36,5 37 
 - No dependencies, ESM only, runs in browsers, Node and SSR.
 - The same input gives the same output on the server and in the browser.
 - Unknown values never break the sort. They go last, alphabetically.
-- About 4.9 kB min+gzip with English; each extra language adds about 0.2 kB.
+- About 5 kB min+gzip with English; each extra language adds about 0.2 kB.
 
 ## Install
 
@@ -23,6 +23,7 @@ sortBySize(['XL', 'S', 'One Size']); // ['S', 'XL', 'One Size']
 sortBySize(variants, { by: (v) => v.size, locales: [de, nl] }); // sorts objects, returns a new array
 sortBySize(items, { by, groupOrder: ['age', 'numeric'] }); // listed groups first, the rest in default order
 sortBySize(perfumes, { by, descending: true }); // largest first, unknown values still last
+sortBySize(['Midi', 'S', 'Mini'], { unknown: 'original-last' }); // ['S', 'Midi', 'Mini']: unknown values keep their order
 
 const compare = createSizeComparator(values, { locales: [de] }); // (a: string, b: string) => number
 values.slice().sort(compare);
@@ -34,12 +35,13 @@ values.slice().sort(compare);
 
 ## Options
 
-| Option       | Type                  | Description                                                                                 |
-| ------------ | --------------------- | ------------------------------------------------------------------------------------------- |
-| `by`         | `(item: T) => string` | Returns the size label of an item. Required when the items aren't strings.                  |
-| `locales`    | `SizeLocale[]`        | Languages besides English, which is always active. Earlier locales win when words conflict. |
-| `groupOrder` | `SizeGroup[]`         | Groups to put first, in this order. The other groups follow in the default order.           |
-| `descending` | `boolean`             | Largest first. Unknown values stay last, in ascending alphabetical order.                   |
+| Option       | Type                  | Description                                                                                                                                                                                                                                                   |
+| ------------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `by`         | `(item: T) => string` | Returns the size label of an item. Required when the items aren't strings.                                                                                                                                                                                    |
+| `locales`    | `SizeLocale[]`        | Languages besides English, which is always active. Earlier locales win when words conflict.                                                                                                                                                                   |
+| `groupOrder` | `SizeGroup[]`         | Groups to put first, in this order. The other groups follow in the default order.                                                                                                                                                                             |
+| `descending` | `boolean`             | Largest first. Unknown values aren't reversed.                                                                                                                                                                                                                |
+| `unknown`    | `UnknownPlacement`    | Where unknown values go: `'alphabetical-last'` (default), `'alphabetical-first'`, `'original-last'` or `'original-first'`. `original` keeps their input order; for `createSizeComparator`, their order in `values`, followed by other strings alphabetically. |
 
 ## What it recognises
 

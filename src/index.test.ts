@@ -1,5 +1,6 @@
 import { expect, expectTypeOf, it } from 'vitest';
 import { de } from './locales';
+import type { SortOptions, UnknownPlacement } from './index';
 import { createSizeComparator, sortBySize } from './index';
 
 it('sorts the spec example', () => expect(sortBySize(['XL', 'S', 'One Size'])).toEqual(['S', 'XL', 'One Size']));
@@ -77,3 +78,31 @@ it('never throws on null options or sparse arrays from JavaScript callers', () =
   // eslint-disable-next-line no-sparse-arrays -- a hole is what a JavaScript caller can pass
   expect(() => sortBySize(['M', , 'S'] as string[])).not.toThrow();
 });
+
+it.each([
+  ['alphabetical-last', ['S', 'M', 'L', 'Maxi', 'Midi', 'Mini']],
+  ['alphabetical-first', ['Maxi', 'Midi', 'Mini', 'S', 'M', 'L']],
+  ['original-last', ['S', 'M', 'L', 'Mini', 'Midi', 'Maxi']],
+  ['original-first', ['Mini', 'Midi', 'Maxi', 'S', 'M', 'L']],
+] as const)('places unknown values with %s', (unknown, expected) =>
+  expect(sortBySize(['Mini', 'L', 'Midi', 'S', 'Maxi', 'M'], { unknown })).toEqual(expected)
+);
+
+it('does not reverse unknown values when descending', () => {
+  const values = ['Mini', 'S', 'Midi', 'XL', 'Maxi'];
+  expect(sortBySize(values, { unknown: 'original-first', descending: true })).toEqual(['Mini', 'Midi', 'Maxi', 'XL', 'S']);
+  expect(sortBySize(values, { unknown: 'alphabetical-first', descending: true })).toEqual(['Maxi', 'Midi', 'Mini', 'XL', 'S']);
+});
+
+it('orders unknown values by their first place in the comparator values, then other strings alphabetically', () => {
+  const compare = createSizeComparator(['Mini', 'L', 'Midi', 'Mini', 'S'], { unknown: 'original-last' });
+  expect(['Kids', 'Midi', 'S', 'Adults', 'Mini', 'L'].sort(compare)).toEqual(['S', 'L', 'Mini', 'Midi', 'Adults', 'Kids']);
+});
+
+it('treats a missing or unrecognised unknown option as the default', () => {
+  expect(sortBySize(['Mini', 'S', 'Midi'], { unknown: null as never })).toEqual(['S', 'Midi', 'Mini']);
+  expect(sortBySize(['Mini', 'S', 'Midi'], { unknown: 'nope' as never })).toEqual(['S', 'Midi', 'Mini']);
+});
+
+it('exports the unknown placement type', () =>
+  expectTypeOf<SortOptions<string>['unknown']>().toEqualTypeOf<UnknownPlacement | undefined>());

@@ -52,6 +52,9 @@ export interface SizeLocale {
   readonly pillows?: OrderedWords;
 }
 
+/** Where unknown values go, and whether they keep their input order or sort alphabetically. */
+export type UnknownPlacement = 'alphabetical-last' | 'alphabetical-first' | 'original-last' | 'original-first';
+
 export interface SortOptions<T> {
   /** Returns the size label of an item. Required when the items are not strings. */
   by?: (item: T) => string;
@@ -59,8 +62,10 @@ export interface SortOptions<T> {
   locales?: readonly SizeLocale[];
   /** Groups to put first, in this order. The other groups follow in the default order. */
   groupOrder?: readonly SizeGroup[];
-  /** Largest first. Unknown values stay last. */
+  /** Largest first. Unknown values are not reversed. */
   descending?: boolean;
+  /** Where unknown values go and how they are ordered among themselves. Default `'alphabetical-last'`. */
+  unknown?: UnknownPlacement;
 }
 
 export const DEFAULT_GROUP_ORDER: readonly SizeGroup[] = [
