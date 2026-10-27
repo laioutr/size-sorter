@@ -3,3 +3,4 @@ pnpm-lock.yaml
 CHANGELOG.md
 test/**/*.json
 .superpowers
+.release-please-manifest.json
